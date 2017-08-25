@@ -1,0 +1,20 @@
+fulla (0.5) UNRELEASED; urgency=medium
+
+  * Empty session number is 20 times a zero
+
+ -- Boris Däppen <bdaeppen.perl@gmail.com>  Tue, 09 May 2017 13:35:51 +0200
+
+fulla (0.4) UNRELEASED; urgency=medium
+
+  * Added register funtionality
+  * Added lougout functionality
+  * Don't emit warnings because of the given/when feature
+  * Possibly more undocumented changes
+
+ -- Boris Däppen <bdaeppen.perl@gmail.com>  Tue, 02 May 2017 13:35:51 +0200
+
+fulla (0.1) UNRELEASED; urgency=medium
+
+  * Initial release.
+
+ -- Boris Däppen <bdaeppen.perl@gmail.com>  Tue, 03 Jan 2017 13:35:51 +0200

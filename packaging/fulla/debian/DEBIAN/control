@@ -1,0 +1,14 @@
+Package: fulla
+Version: 0.5
+Section: utils
+Priority: extra
+Architecture: all
+Depends: mysql-server, perl, perl-doc, libdbi-perl, libdbd-mysql-perl, libio-socket-ssl-perl, liblog-log4perl-perl, libdigest-perl, libdigest-bcrypt-perl, libstring-random-perl, libhtml-table-perl
+Maintainer: Boris Daeppen <bdaeppen.perl@gmail.com>
+Description: Datenbankbasierter TCP-Server
+ Software Paket fuer ICT Berufsbildung Modul 183.
+ .
+ Nicht auf produktiven Systemen einsetzten.
+ Gebrauch auf eigene Gefahr.
+ Keinerlei Gewaehr auf Funktion und Fehlerfreiheit.
+Installed-Size: 156

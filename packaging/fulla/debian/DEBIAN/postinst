@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+VMADMIN_INSTALLED="$(mysql -uroot -pgibbiX12345 -sse "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = 'vmadmin')")"
+
+if [ $VMADMIN_INSTALLED = 1 ]; then
+  echo 'POSTINST: vmadmin schon eingerichtet...'
+else
+  echo 'POSTINST: richte Datenbank ein...'
+  echo "CREATE USER 'vmadmin'@'localhost' IDENTIFIED BY 'gibbiX12345';" | mysql -uroot -pgibbiX12345
+  echo "GRANT ALL PRIVILEGES ON * . * TO 'vmadmin'@'localhost';"        | mysql -uroot -pgibbiX12345
+  echo "FLUSH PRIVILEGES;"                                              | mysql -uroot -pgibbiX12345
+fi
+
+echo 'POSTINST: befülle Datenbank...'
+
+mysql -uvmadmin -pgibbiX12345 < /usr/share/fulla/db.sql
+

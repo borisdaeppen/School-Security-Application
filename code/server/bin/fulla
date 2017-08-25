@@ -1,0 +1,127 @@
+#!/usr/bin/env perl
+use v5.20;
+use strict;
+use warnings;
+use IO::Socket::INET;
+
+use Log::Log4perl qw(:easy);
+use DBI;
+
+use Fulla::Werchzueg;
+use Fulla::CommandDispatcher;
+
+
+# setting up Logger
+Log::Log4perl->easy_init( {level => $DEBUG, layout => '%d %F{1} (%L) -> %m%n'} );
+my $log = Log::Log4perl->get_logger();
+
+$log->info('starting server');
+
+# log and end on ctrl+c signal
+$SIG{'INT'} = sub { $log->info('ctrl+c pressed'); exit 0};
+
+# setting up DB connection
+my $dbh = DBI->connect( 'DBI:mysql:database=fulla;host=localhost;',
+                        'root',
+                        'gibbiX12345',
+                      );
+if ($dbh) {
+    $log->info('db connection established');
+}
+else {
+    $log->fatal($DBI::errstr);
+    die ($DBI::errstr);
+}
+$dbh->do('set names utf8');
+
+# register db and logger globally (singleton pattern)
+Fulla::Werchzueg->set_database($dbh);
+Fulla::Werchzueg->set_logger  ($log);
+
+# initialise object for parsing and dispatching incoming commands
+my $you = Fulla::CommandDispatcher->new();
+
+# configure "auto-flush": no buffering in print to console
+$| = 1;
+ 
+# creating a listening socket
+my $socket = new IO::Socket::INET (
+    LocalAddr     => '0.0.0.0',     # local server address
+    LocalPort     => '7777',        # local server port
+    Listen        => 5,             # queue size for connections
+    Proto         => 'tcp',         # protocol used
+);
+die "cannot create socket $!\n" unless $socket;
+$log->fatal("cannot create socket $!") unless $socket;
+$log->info('server waiting for client connection on port 7777');
+
+# endless loop, looking for client requests
+while(1)
+{
+    # waiting for a new client connection
+    my $client_socket = $socket->accept() or die "socket accept failed $!";
+ 
+    # get information about a newly connected client
+    my $client_address = $client_socket->peerhost();
+    my $client_port    = $client_socket->peerport();
+    $log->info("connection from $client_address:$client_port");
+ 
+    # read up to 1024 characters from the connected client
+    my $client_data = '';
+    sysread( $client_socket, $client_data, 1024);
+    $log->info("received data: $client_data");
+
+    # do whatever needs to be done
+    my $answer = $you->do($client_data);
+    $log->debug("answer: $answer");
+
+    # write response data to the connected client
+    print $client_socket $answer;
+ 
+    # notify client that response has been sent
+    shutdown($client_socket, 1);
+
+    $log->info("request from $client_address:$client_port answered");
+}
+ 
+# no matter what: if program ends, close socket
+END {
+    $log->info('Byebye: closing socket');
+    $socket->close() if $socket;
+}
+
+
+
+# Some helpfull links on how to write a TCP application #
+#########################################################
+# http://xmodulo.com/how-to-write-simple-tcp-server-and-client-in-perl.html
+# https://metacpan.org/pod/IO::Socket::INET
+# https://metacpan.org/pod/IO::Socket::SSL
+
+__END__
+
+=encoding UTF-8
+
+=head1 NAME
+
+B<fulla> - executable to start the C<Fulla> server.
+
+This module is part of the C<Fulla> project.
+
+=head1 SYNOPSIS
+
+To start the server in the terminal, just type
+
+ fulla
+
+If you want to save some logs, you can redirect C<stdin> and C<stdout>
+
+ fulla &> fulla_logs_$(date +%F).log
+
+=head1 LIBRARY
+
+All additional server code can be found under the perl namespace C<Fulla>.
+
+=head1 AUTHOR
+
+© Boris Däppen, Biel, 2017

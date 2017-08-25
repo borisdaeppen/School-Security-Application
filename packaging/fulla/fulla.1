@@ -1,0 +1,26 @@
+.TH fulla 1 "FEBRUARY 2017" Linux "User Manuals"
+.SH NAME
+fulla \- Software für Modul 183
+.SH BESCHREIBUNG
+.B fulla
+ist ein Mini-Server, welche in Perl geschrieben ist.
+.SH AUFRUF
+Das Kommando
+.B fulla
+im Terminal auführen.
+Ein kleiner Server hört nun auf TCP Port 7777.
+Mit Control+C kann der Server wieder gestoppt werden.
+
+.SH SCHNITTSTELLEN
+
+Der Server sendet alle Log-Meldungen auf STDOUT und STDERR.
+
+Der Server wird mit dem Client
+.B ziu
+angesprochen.
+
+Die Daten werden in einer MySQL-Datenbank verwaltet.
+.SH KONFIGURATION
+Zurzeit keine Konfiguration.
+.SH AUTOR
+Boris Däppen <bdaeppen.perl@gmail.com>

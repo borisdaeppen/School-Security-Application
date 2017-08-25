@@ -1,0 +1,14 @@
+Package: ziu
+Version: 0.4
+Section: utils
+Priority: extra
+Architecture: all
+Depends: perl, perl-doc, libfile-slurp-perl, libio-prompter-perl
+Maintainer: Boris Daeppen <bdaeppen.perl@gmail.com>
+Description: TCP-Client für «Fulla Datenbank-Server»
+ Software Paket fuer ICT Berufsbildung Modul 183.
+ .
+ Nicht auf produktiven Systemen einsetzten.
+ Gebrauch auf eigene Gefahr.
+ Keinerlei Gewaehr auf Funktion und Fehlerfreiheit.
+Installed-Size: 52

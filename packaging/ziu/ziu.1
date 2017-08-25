@@ -1,0 +1,63 @@
+.TH fulla 1 "FEBRUARY 2017" Linux "User Manuals"
+.SH NAME
+ziu \- Software für Modul 183
+.SH BESCHREIBUNG
+.B ziu
+ist ein Client für den Server
+.B fulla.
+Die Software ist in Perl geschrieben.
+.SH AUFRUF
+Das Kommando
+.B ziu
+im Terminal auführen.
+Eingaben werden nach 192.168.220.12:7777 geschickt. 
+
+Die folgenden Kommandos können dem Programm
+.B ziu
+als Argumente mitgegeben werden:
+
+.B login USER PW
+    Eröffnen einer Session.
+    Ohne Session können keine andere Kommandos verwendet werden.
+
+.B register USER PW
+    Erstellt einen neuen Applikationsbenutzer.
+
+.B logout
+    Beenden der aktuellen Session.
+
+.B ping
+    Schickt eine Testnachricht an den Server.
+
+.B artikel [MUSTER]
+    Gibt eine Liste von Artikeln zurück welche optional MUSTER im Namen enthalten.
+
+.B neuerartikel NAME ANZAHL PREIS
+    Erstell einen neuen Artikel in der Datenbank.
+
+.B loescheartikel ID
+    Löscht einen Artikel aus der Datenbank. Achtung: Löscht nur, wenn keine anderen Tabellen-Einträge referenziert werden, also noch keine Käufe auf dem Artikel gemacht wurden.
+
+.B list [OPTIONEN]
+    Zeigt Dateien im Heimverzeichnis an.
+    Akzeptiert alle OPTIONEN des Linux-Kommandos
+.B ls.
+
+.B http
+    Liefert Daten zu Artikeln in HTML als HTTP-Anwort. Es wird hierfür kein Login benötigt! Ein gängiger Internetbrowser kann so vom Server Daten empfangen.
+
+.SH BEISPIELE
+
+ziu login hans muster
+
+ziu ping
+
+ziu artikel k
+
+.SH KONFIGURATION
+Session-Daten werden unter
+.B /tmp/ziu_session.txt
+gespeichert.
+
+.SH AUTOR
+Boris Däppen <bdaeppen.perl@gmail.com>

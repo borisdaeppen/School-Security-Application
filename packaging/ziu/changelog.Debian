@@ -1,0 +1,17 @@
+ziu (0.4) UNRELEASED; urgency=medium
+
+  * Empty session numer is now 20 times a zero
+
+ -- Boris Däppen <bdaeppen.perl@gmail.com>  Tue, 09 May 2017 13:35:51 +0200
+
+ziu (0.3) UNRELEASED; urgency=medium
+
+  * Changes not documented, since under heavy development.
+
+ -- Boris Däppen <bdaeppen.perl@gmail.com>  Tue, 02 May 2017 13:35:51 +0200
+
+ziu (0.1) UNRELEASED; urgency=medium
+
+  * Initial release.
+
+ -- Boris Däppen <bdaeppen.perl@gmail.com>  Tue, 03 Jan 2017 13:35:51 +0200
