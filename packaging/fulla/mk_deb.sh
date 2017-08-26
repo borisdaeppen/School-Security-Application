@@ -16,12 +16,12 @@ fi
 if [ ! -e debian/usr/bin ]; then
     mkdir -p debian/usr/bin
 fi
-cp ../../code/serverli/bin/fulla debian/usr/bin/fulla
+cp ../../code/server/bin/fulla debian/usr/bin/fulla
 
 if [ ! -e debian/usr/share/perl5 ]; then
     mkdir -p debian/usr/share/perl5
 fi
-cp -r ../../code/serverli/lib/* debian/usr/share/perl5/
+cp -r ../../code/server/lib/* debian/usr/share/perl5/
 
 #if [ ! -e debian/etc ]; then
 #    mkdir -p debian/etc
@@ -38,7 +38,7 @@ cp -r ../../code/serverli/lib/* debian/usr/share/perl5/
 if [ ! -e debian/usr/share/fulla ]; then
     mkdir -p debian/usr/share/fulla
 fi
-cp ../../code/serverli/sql/db.sql debian/usr/share/fulla
+cp ../../code/server/sql/db.sql debian/usr/share/fulla
 
 # pack manpage
 if [ ! -e debian/usr/share/man/man1 ]; then

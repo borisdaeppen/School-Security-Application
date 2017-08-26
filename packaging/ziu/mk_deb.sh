@@ -11,7 +11,7 @@ rm ziu*.deb 2> /dev/null
 if [ ! -e debian/usr/bin ]; then
     mkdir -p debian/usr/bin
 fi
-cp ../../code/terminal_client/ziu debian/usr/bin/ziu
+cp ../../code/client/ziu debian/usr/bin/ziu
 
 #if [ ! -e debian/etc ]; then
 #    mkdir -p debian/etc
