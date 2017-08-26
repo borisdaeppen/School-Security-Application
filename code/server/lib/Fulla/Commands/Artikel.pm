@@ -1,30 +1,33 @@
-package Fulla::Commands::Artikel;
+#package Fulla::Commands::Artikel;
 
 use v5.22;
 use warnings;
 
+use Dios;
 use Fulla::Werchzueg;
 
-sub reply {
-    my $class   = shift;
-    my $artikel = shift;
-    my $log     = Fulla::Werchzueg->get_logger();
-    my $dbh     = Fulla::Werchzueg->get_database();
+class Fulla::Commands::Artikel {
 
-    my $answer = '';
-
-    my $sql = "SELECT * FROM artikel WHERE bezeichnung LIKE '%$artikel%'";
-
-    $log->debug("QUERY: $sql");
-
-    my $rows = $dbh->selectall_arrayref($sql);
-
-    foreach my $row (@{$rows}) {
-        $answer .= join("\t", @{$row});
-        $answer .= "\n";
+    method reply (Str $artikel) {
+        my $log = Fulla::Werchzueg->get_logger();
+        my $dbh = Fulla::Werchzueg->get_database();
+    
+        my $answer = '';
+    
+        my $sql = "SELECT * FROM artikel WHERE bezeichnung LIKE '%$artikel%'";
+    
+        $log->debug("QUERY: $sql");
+    
+        my $rows = $dbh->selectall_arrayref($sql);
+    
+        foreach my $row (@{$rows}) {
+            $answer .= join("\t", @{$row});
+            $answer .= "\n";
+        }
+    
+        return $answer;
+    
     }
-
-    return $answer;
 
 }
 
