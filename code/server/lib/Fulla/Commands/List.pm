@@ -1,6 +1,8 @@
 #package Fulla::Commands::List;
 
 use v5.22;
+use warnings;
+
 use Dios;
 
 class Fulla::Commands::List {
