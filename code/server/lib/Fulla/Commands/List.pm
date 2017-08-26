@@ -1,15 +1,15 @@
-package Fulla::Commands::List;
+#package Fulla::Commands::List;
 
-use v5.20;
-use strict;
-use warnings;
+use v5.22;
+use Dios;
 
-sub reply {
-    my $class  = shift;
-    my $option = shift;
+class Fulla::Commands::List {
 
-    return `ls $option`;
-
+    method reply (Str $option){
+    
+        return `ls $option`;
+    
+    }
 }
 
 1;
