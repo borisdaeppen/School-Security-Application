@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-use v5.20;
+use v5.22;
 use IO::Socket::INET;
 use File::Slurp;
  
@@ -8,7 +8,7 @@ $| = 1;
 
 # create a connecting socket
 my $socket = new IO::Socket::INET (
-    PeerHost    => '192.168.220.12',
+    PeerHost    => '127.0.0.1',
     PeerPort    => '7777',
     Proto       => 'tcp',
 );

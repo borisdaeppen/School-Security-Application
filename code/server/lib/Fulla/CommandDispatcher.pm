@@ -1,7 +1,6 @@
 package Fulla::CommandDispatcher;
 
-use v5.20;
-use strict;
+use v5.22;
 use warnings;
 no warnings 'experimental'; # disable warnings from given/when
 
