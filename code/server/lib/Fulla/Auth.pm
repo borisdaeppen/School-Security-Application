@@ -30,9 +30,9 @@ class Fulla::Auth {
     
             # https://www.w3schools.com/sql/sql_injection.asp
             my $sql = "SELECT id FROM user WHERE name = '$user' and pw_hash = '$hash_client'";
-            $self->{log}->debug("QUERY: $sql");
+            $log->debug("QUERY: $sql");
     
-            my $sth = $self->{dbh}->prepare($sql);
+            my $sth = $dbh->prepare($sql);
             $sth->execute();
             my ($user_id) = $sth->fetchrow_array();
     
@@ -42,7 +42,7 @@ class Fulla::Auth {
                 # SUCCESSFULL LOGIN
                 # generate and store a session-id and return it to caller
                 my $session_id = String::Random->new->randregex('\d{20}');
-                $self->{SESSION}->{$session_id} = 1;
+                $SESSION->{$session_id} = 1;
     
                 return ( $session_id, 'login ok' );;
             }   
@@ -61,7 +61,7 @@ class Fulla::Auth {
     
             # see if the session-id is registered already
             # if yes, this means, a successfull login has happened before
-            if ( exists $self->{SESSION}->{$session_id} ) {
+            if ( exists $SESSION->{$session_id} ) {
     
                 # AUTHORISATION OK
                 # return session-id to caller
@@ -71,7 +71,7 @@ class Fulla::Auth {
     
                 # AUTHORISATION FAILED
                 # return zero to caller
-                $self->{log}->info("session not valid: $session_id");
+                $log->info("session not valid: $session_id");
                 return ( '00000000000000000000', 'session not valid' );
             }
         }
