@@ -1,12 +1,16 @@
-package Fulla::Commands::Ping;
+#package Fulla::Commands::Ping;
 
 use v5.22;
 use warnings;
 
-sub reply {
-    my $class = shift;
+use Dios;
 
-    return 'pong';
+class Fulla::Commands::Ping {
+
+    method reply {
+        return 'pong';
+    }
+
 }
 
 1;
