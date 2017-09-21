@@ -23,7 +23,7 @@ class Fulla::Auth {
     }
 
     
-    # check a client request for authoristion
+    # check a client request for authorisation
     method check (Str $command) {
     
         # enter here if user demands a new login
