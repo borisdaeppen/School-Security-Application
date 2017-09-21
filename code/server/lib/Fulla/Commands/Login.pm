@@ -1,12 +1,18 @@
-package Fulla::Commands::Login;
+#package Fulla::Commands::Login;
 
 use v5.22;
 use warnings;
 
-sub reply {
-    my $class = shift;
+use Dios;
 
-    return 'Hallo!';
+class Fulla::Commands::Login {
+
+    method reply {
+
+        # authentication happens in Fulla::Auth
+        return 'Hallo!';
+    }
+
 }
 
 1;

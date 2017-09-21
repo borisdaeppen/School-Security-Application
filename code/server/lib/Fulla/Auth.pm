@@ -14,6 +14,14 @@ class Fulla::Auth {
     has $dbh = Fulla::Werchzueg->get_database();
     has $SESSION  = {};
     has $AUTH_MSG = '';
+
+    method add_session(Str $new_session) {
+        $SESSION->{$new_session} = 1;
+    }
+    method remove_session(Str $session) {
+        delete $SESSION->{$session};
+    }
+
     
     # check a client request for authoristion
     method check (Str $command) {

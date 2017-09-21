@@ -1,16 +1,19 @@
-package Fulla::Commands::Logout;
+#package Fulla::Commands::Logout;
 
 use v5.22;
 use warnings;
 
-sub reply {
-    my $class   = shift;
-    my $auth    = shift;
-    my $session = shift;
+use Dios;
 
-    delete $auth->{SESSION}->{$session};
+class Fulla::Commands::Logout {
 
-    return 'Ausgeloggt';
+    method reply ($auth, Str $session) {
+
+        $auth->remove_session($session);
+    
+        return 'Ausgeloggt';
+    }
+
 }
 
 1;
