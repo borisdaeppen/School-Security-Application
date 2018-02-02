@@ -1,7 +1,6 @@
 package Fulla::Commands::HTTP::Artikel;
 
-use v5.20;
-use strict;
+use v5.22;
 use warnings;
 
 use Fulla::Werchzueg;

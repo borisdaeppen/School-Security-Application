@@ -25,7 +25,7 @@ sub new {
     return $self;
 }
 
-# check a client request for authoristion
+# check a client request for authorisation
 sub check {
     my $self    = shift;
     my $command = shift;
