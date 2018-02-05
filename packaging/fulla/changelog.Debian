@@ -1,3 +1,11 @@
+fulla (0.6) UNRELEASED; urgency=medium
+
+  * Remove 'use strict', since it is redundant with 'use v5.22'
+  * minor documentation updates
+  * repository was moved and is now standalone
+
+ -- Boris Däppen <bdaeppen.perl@gmail.com>  Mon, 05 Feb 2018 17:00:00 +0200
+
 fulla (0.5) UNRELEASED; urgency=medium
 
   * Empty session number is 20 times a zero
