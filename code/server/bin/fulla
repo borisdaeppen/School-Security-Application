@@ -12,11 +12,14 @@ use Fulla::CommandDispatcher;
 
 use Proc::Daemon;
 
+# Deamonise process
 Proc::Daemon::Init;
 
-
 # setting up Logger
-Log::Log4perl->easy_init( {level => $DEBUG, layout => '%d %F{1} (%L) -> %m%n'} );
+Log::Log4perl->easy_init({ level  => $DEBUG,
+                           layout => '%d %F{1} (%L) -> %m%n',
+                           file   => "/tmp/fulla.log",
+                        });
 my $log = Log::Log4perl->get_logger();
 
 $log->info('starting server');
