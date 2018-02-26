@@ -10,6 +10,10 @@ use DBI;
 use Fulla::Werchzueg;
 use Fulla::CommandDispatcher;
 
+use Proc::Daemon;
+
+Proc::Daemon::Init;
+
 
 # setting up Logger
 Log::Log4perl->easy_init( {level => $DEBUG, layout => '%d %F{1} (%L) -> %m%n'} );
@@ -18,7 +22,10 @@ my $log = Log::Log4perl->get_logger();
 $log->info('starting server');
 
 # log and end on ctrl+c signal
-$SIG{'INT'} = sub { $log->info('ctrl+c pressed'); exit 0};
+#$SIG{'INT'} = sub { $log->info('ctrl+c pressed'); exit 0};
+
+my $continue = 1;
+$SIG{TERM} = sub { $continue = 0 };
 
 # setting up DB connection
 my $dbh = DBI->connect( 'DBI:mysql:database=fulla;host=localhost;',
@@ -56,7 +63,7 @@ $log->fatal("cannot create socket $!") unless $socket;
 $log->info('server waiting for client connection on port 7777');
 
 # endless loop, looking for client requests
-while(1)
+while($continue)
 {
     # waiting for a new client connection
     my $client_socket = $socket->accept() or die "socket accept failed $!";
@@ -85,10 +92,10 @@ while(1)
 }
  
 # no matter what: if program ends, close socket
-END {
-    $log->info('Byebye: closing socket');
-    $socket->close() if $socket;
-}
+#END {
+#    $log->info('Byebye: closing socket');
+#    $socket->close() if $socket;
+#}
 
 
 
