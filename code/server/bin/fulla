@@ -14,7 +14,7 @@ use Fulla::CommandDispatcher;
 
 # Deamonise process
 my $daemon = Proc::Daemon->new( work_dir     => "$ENV{PWD}",
-                                pid_file     => "fulla.pid",
+                                pid_file     => "/tmp/fulla.pid",
                                 child_STDOUT => 'fulla.stdout',
                                 child_STDERR => 'fulla.stderr',
                               );
