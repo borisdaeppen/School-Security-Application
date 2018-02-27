@@ -12,35 +12,50 @@ use Proc::Daemon;
 use Fulla::Werchzueg;
 use Fulla::CommandDispatcher;
 
-# Deamonise process
-my $daemon = Proc::Daemon->new( work_dir     => "$ENV{PWD}",
-                                pid_file     => "/tmp/fulla.pid",
-                                child_STDOUT => 'fulla.stdout',
-                                child_STDERR => 'fulla.stderr',
-                              );
-$daemon->Init();
+# basic help message for -h and --help
+if (defined $ARGV[0] and $ARGV[0] =~ /^-h$|^--help$/) {
+    say "\n\tsee 'man fulla' for documentation\n";
+    exit 0;
+}
 
-# setting up Logger
-Log::Log4perl->easy_init({ level  => $DEBUG,
-                           layout => '%d %F{1} (%L) -> %m%n',
-                           file   => "$ENV{PWD}/fulla.log",
-                        });
+# are we a daemon?
+my $i_am_a_daemon = 1;
+# if any argument is given, we DON'T daemonise
+   $i_am_a_daemon = 0 if defined $ARGV[0];
+
+my $daemon;
+if ($i_am_a_daemon) {
+    # Deamonise process
+    $daemon = Proc::Daemon->new( work_dir     => "$ENV{PWD}",
+                                    pid_file     => "/tmp/fulla.pid",
+                                    child_STDOUT => 'fulla.stdout',
+                                    child_STDERR => 'fulla.stderr',
+                                  );
+    $daemon->Init();
+}
+
+# setting up logger config
+my $log_config = { level  => $DEBUG,
+                   layout => '%d %F{1} (%L) -> %m%n',
+                 };
+# log to file if in daemon mode
+$log_config->{file} = "$ENV{PWD}/fulla.log" if $i_am_a_daemon;
+
+Log::Log4perl->easy_init($log_config);
 my $log = Log::Log4perl->get_logger();
 
-# we have a daemon and a logger, I think we can say that we have started :-)
+# we have a logger, I think we can say that we have started :-)
 $log->info('starting server');
 
 # log process id
-my ($pid, $pid_file) = $daemon->get_pid();
-$log->info('process id '      . $pid);
-$log->info('process id file ' . $pid_file);
-
-# this variable controls the main loop of the daemon process
-my $continue = 1;
-
-# log and end on ctrl+c signal
-$SIG{'INT'} = sub { $log->info('ctrl+c pressed') if $log; $continue = 0};
-$SIG{TERM}  = sub { $log->info('I got killed')   if $log; $continue = 0 };
+if ($i_am_a_daemon) {
+    my ($pid, $pid_file) = $daemon->get_pid();
+    $log->info('process id '      . $pid);
+    $log->info('process id file ' . $pid_file);
+}
+else {
+    $log->info('not running as daemon, argv is: ' . join(', ', @ARGV));
+}
 
 # setting up DB connection
 my $dbh = DBI->connect( 'DBI:mysql:database=fulla;host=localhost;',
@@ -77,6 +92,19 @@ die "cannot create socket $!\n" unless $socket;
 $log->fatal("cannot create socket $!") unless $socket;
 $log->info('server waiting for client connection on port 7777');
 
+# this variable controls the main loop of the process
+my $continue = 1;
+
+# signal handlers for terminating the process
+$SIG{'INT'} = sub { $log->info('ctrl+c pressed') if $log;
+                    $socket->close()             if $socket;
+                    $continue = 0;
+                  };
+$SIG{TERM}  = sub { $log->info('I got killed')   if $log;
+                    $socket->close()             if $socket;
+                    $continue = 0;
+                  };
+
 # endless loop, looking for client requests
 while($continue)
 {
@@ -108,8 +136,8 @@ while($continue)
  
 # clean up your room!
 END {
-    $log->info('Byebye: closing socket') if $log;
-    $socket->close()                     if $socket;
+    $log->info('bye bye') if $log;
+    $socket->close()      if $socket;
 }
 
 # Some helpfull links on how to write a TCP application #
