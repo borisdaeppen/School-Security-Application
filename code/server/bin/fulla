@@ -120,7 +120,7 @@ while($continue)
 
     unless ($client_socket) {
         $log->fatal("socket accept failed $!");
-        exit ;
+        exit 0;
     }
  
     # get information about a newly connected client
