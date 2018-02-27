@@ -3,11 +3,10 @@ use v5.22;
 use warnings;
 
 use IO::Socket::INET;
+use Proc::Daemon;
 
 use Log::Log4perl qw(:easy);
 use DBI;
-
-use Proc::Daemon;
 
 use Fulla::Werchzueg;
 use Fulla::CommandDispatcher;
@@ -18,13 +17,12 @@ if (defined $ARGV[0] and $ARGV[0] =~ /^-h$|^--help$/) {
     exit 0;
 }
 
-# are we a daemon? If any argument is given, we DON'T daemonise
+# are we a daemon? If any argument is given, we DON'T daemonize
 my $i_am_a_daemon = 1;
    $i_am_a_daemon = 0 if defined $ARGV[0];
 
 my $daemon;
 if ($i_am_a_daemon) {
-
     # help the poor souls, in controlling the daemon
     say '';
     say "\tHi, I'm a daemon\n";
@@ -32,7 +30,8 @@ if ($i_am_a_daemon) {
     say "\twatch me:\t\ttail -f fulla.*";
     say "\tdon't run me as daemon:\tfulla test";
     say '';
-    # Deamonise process
+
+    # daemonize process
     $daemon = Proc::Daemon->new( work_dir     => "$ENV{PWD}",
                                  pid_file     => "/tmp/fulla.pid",
                                  child_STDOUT => 'fulla.stdout',
