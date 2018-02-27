@@ -7,28 +7,40 @@ use IO::Socket::INET;
 use Log::Log4perl qw(:easy);
 use DBI;
 
+use Proc::Daemon;
+
 use Fulla::Werchzueg;
 use Fulla::CommandDispatcher;
 
-use Proc::Daemon;
-
 # Deamonise process
-Proc::Daemon::Init;
+my $daemon = Proc::Daemon->new( work_dir     => "$ENV{PWD}",
+                                pid_file     => "fulla.pid",
+                                child_STDOUT => 'fulla.stdout',
+                                child_STDERR => 'fulla.stderr',
+                              );
+$daemon->Init();
 
 # setting up Logger
 Log::Log4perl->easy_init({ level  => $DEBUG,
                            layout => '%d %F{1} (%L) -> %m%n',
-                           file   => "/tmp/fulla.log",
+                           file   => "$ENV{PWD}/fulla.log",
                         });
 my $log = Log::Log4perl->get_logger();
 
+# we have a daemon and a logger, I think we can say that we have started :-)
 $log->info('starting server');
 
-# log and end on ctrl+c signal
-#$SIG{'INT'} = sub { $log->info('ctrl+c pressed'); exit 0};
+# log process id
+my ($pid, $pid_file) = $daemon->get_pid();
+$log->info('process id '      . $pid);
+$log->info('process id file ' . $pid_file);
 
+# this variable controls the main loop of the daemon process
 my $continue = 1;
-$SIG{TERM} = sub { $continue = 0 };
+
+# log and end on ctrl+c signal
+$SIG{'INT'} = sub { $log->info('ctrl+c pressed') if $log; $continue = 0};
+$SIG{TERM}  = sub { $log->info('I got killed')   if $log; $continue = 0 };
 
 # setting up DB connection
 my $dbh = DBI->connect( 'DBI:mysql:database=fulla;host=localhost;',
@@ -94,13 +106,11 @@ while($continue)
     $log->info("request from $client_address:$client_port answered");
 }
  
-# no matter what: if program ends, close socket
-#END {
-#    $log->info('Byebye: closing socket');
-#    $socket->close() if $socket;
-#}
-
-
+# clean up your room!
+END {
+    $log->info('Byebye: closing socket') if $log;
+    $socket->close()                     if $socket;
+}
 
 # Some helpfull links on how to write a TCP application #
 #########################################################
