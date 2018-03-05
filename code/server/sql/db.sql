@@ -21,13 +21,13 @@ CREATE TABLE kunde (
 
 CREATE TABLE kauf (
     id INTEGER NOT NULL AUTO_INCREMENT,
-    id_kunde INTEGER NOT NULL,
-    id_artikel INTEGER NOT NULL,
+    id_kunde INTEGER,
+    id_artikel INTEGER,
     menge INTEGER NOT NULL,
     zeitpunkt DATETIME NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_kunde) REFERENCES kunde(id),
-    FOREIGN KEY (id_artikel) REFERENCES artikel(id)
+    FOREIGN KEY (id_kunde) REFERENCES kunde(id) ON DELETE SET NULL,
+    FOREIGN KEY (id_artikel) REFERENCES artikel(id) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE user (
