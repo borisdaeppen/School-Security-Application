@@ -24,6 +24,8 @@ sub reply {
         $answer .= "\n";
     }
 
+    sleep 1; # simulate some heavy work :-)
+
     return $answer;
 
 }
