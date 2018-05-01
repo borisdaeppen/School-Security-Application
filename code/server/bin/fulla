@@ -81,6 +81,7 @@ while(1)
         my $span = $current_time - $last_access;
         if ($span < 2) {
             $log->warn("client blocked: $client_address:$client_port");
+            print $client_socket "00000000000000000000 to much requests from $client_address";
             shutdown($client_socket, 1);
             next;
         }
