@@ -56,6 +56,7 @@ die "cannot create socket $!\n" unless $socket;
 $log->fatal("cannot create socket $!") unless $socket;
 $log->info('server waiting for client connection on port 7777');
 
+# any incoming IP must have had at least one second pause
 my $dos = Fulla::Dos->new(1);
 
 # endless loop, looking for client requests
@@ -69,6 +70,7 @@ while(1)
     my $client_port    = $client_socket->peerport();
     $log->info("connection from $client_address:$client_port");
 
+    # don't answer dos attacks
     if ($dos->check($client_address)) {
 		$log->warn("client blocked: $client_address:$client_port");
         print $client_socket
@@ -76,7 +78,7 @@ while(1)
         shutdown($client_socket, 1);
         next;
 	}
- 
+
     # read up to 1024 characters from the connected client
     my $client_data = '';
     sysread( $client_socket, $client_data, 1024);
