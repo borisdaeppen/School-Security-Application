@@ -9,6 +9,7 @@ use DBI;
 
 use Fulla::Werchzueg;
 use Fulla::CommandDispatcher;
+use Fulla::Dos;
 
 
 # setting up Logger
@@ -55,6 +56,8 @@ die "cannot create socket $!\n" unless $socket;
 $log->fatal("cannot create socket $!") unless $socket;
 $log->info('server waiting for client connection on port 7777');
 
+my $dos = Fulla::Dos->new(1);
+
 # endless loop, looking for client requests
 while(1)
 {
@@ -65,6 +68,14 @@ while(1)
     my $client_address = $client_socket->peerhost();
     my $client_port    = $client_socket->peerport();
     $log->info("connection from $client_address:$client_port");
+
+    if ($dos->check($client_address)) {
+		$log->warn("client blocked: $client_address:$client_port");
+        print $client_socket
+            "00000000000000000000 dos from $client_address";
+        shutdown($client_socket, 1);
+        next;
+	}
  
     # read up to 1024 characters from the connected client
     my $client_data = '';

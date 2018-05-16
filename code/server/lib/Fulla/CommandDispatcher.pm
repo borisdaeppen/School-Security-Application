@@ -7,6 +7,7 @@ no warnings 'experimental'; # disable warnings from given/when
 use DBI; # with DBD::mysql
 
 use Fulla::Auth;
+use Fulla::Dos;
 use Fulla::Commands::Login;
 use Fulla::Commands::Logout;
 use Fulla::Commands::Register;
@@ -24,10 +25,12 @@ sub new {
     my $log   = Fulla::Werchzueg->get_logger();
     my $dbh   = Fulla::Werchzueg->get_database();
     my $auth  = Fulla::Auth->new();
+    my $dos   = Fulla::Dos->new(2);
 
     my $self = { log  => $log,
                  dbh  => $dbh,
                  auth => $auth,
+                 dos  => $dos,
                };
     bless $self, $class;
 
@@ -67,6 +70,12 @@ sub do {
     #######################################################
     # From here on only authorised messages are processed #
     #######################################################
+
+    if ($self->{dos}->check($session)) {
+        $answer = "00000000000000000000 too many requests";
+        # EXIT
+        return $answer;
+    }
 
     $self->{log}->debug( "command before parse: $command");
 
